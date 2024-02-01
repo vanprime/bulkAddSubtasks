@@ -9,16 +9,16 @@ This extension adds an extra input field to throw in all your desired sub-tasks,
 
 # usage
 
-1. Access Extension Management Page: Type `chrome://extensions/` in the address bar and press Enter.
+1. Access Extension Management Page: Type `chrome://extensions/` in the address bar and press Enter.<br>
    <img src="./docs/images/chrome-extension-manager.png" width="300">
 
-2. Enable Developer Mode: In the top right corner of the Extensions page, you’ll see a switch for Developer mode. Turn it on. This allows you to load unpacked extensions.
+2. Enable Developer Mode: In the top right corner of the Extensions page, you’ll see a switch for Developer mode. Turn it on. This allows you to load unpacked extensions.<br>
    <img src="./docs/images/chrome-developer-mode.png" width="300">
 
-3. Load the Unpacked Extension: Click on the load unpacked button which will appear in the corner after you enable Developer Mode. A file dialog will open. Navigate to your clone of the repo and click open.
+3. Load the Unpacked Extension: Click on the load unpacked button which will appear in the corner after you enable Developer Mode. A file dialog will open. Navigate to your clone of the repo and click open.<br>
    <img src="./docs/images/chrome-load-unpacked.png" width="300">
 
-4. pin the extension to the toolbar
+4. pin the extension to the toolbar<br>
    <img src="./docs/images/chrome-pin-extension.png" width="300">
 
 5. On a\* page showing a detail view of the issue you want to add the subtasks to, klick on the extension icon. A div with an input field and a button will appear. Insert all the subtask summaries you want to add, seperated by ;
