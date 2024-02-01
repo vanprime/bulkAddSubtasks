@@ -58,7 +58,7 @@ export default function App() {
       if (issueData) {
         setProgress(4);
       }
-      const uploadSuccess = postJiraIssues(issueData);
+      const uploadSuccess = await postJiraIssues(issueData);
       if (uploadSuccess) {
         setAmountSubtasks(0);
         setInputText("");

@@ -1,7 +1,8 @@
-import { jiraUrl } from "../constants";
+import createJiraApiBaseUrl from "./createJiraApiBaseUrl";
 
 export default async function postJiraIssues(issueData) {
-  const apiUrl = `${jiraUrl}/issue/bulk`;
+  const jiraApiBaseUrl = createJiraApiBaseUrl();
+  const apiUrl = `${jiraApiBaseUrl}/issue/bulk`;
   try {
     const response = await fetch(apiUrl, {
       method: "POST",

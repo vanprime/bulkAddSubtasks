@@ -1,7 +1,9 @@
-import { jiraUrl, subTaskId } from "../constants";
+import { subTaskId } from "../constants";
+import createJiraApiBaseUrl from "./createJiraApiBaseUrl";
 
 export default async function getCreateIssueMetadata(projectKey) {
-  const apiUrl = `${jiraUrl}/issue/createmeta/${projectKey}/issuetypes/${subTaskId}?startAt=0&maxResults=50`;
+  const jiraApiBaseUrl = createJiraApiBaseUrl();
+  const apiUrl = `${jiraApiBaseUrl}/issue/createmeta/${projectKey}/issuetypes/${subTaskId}?startAt=0&maxResults=50`;
 
   try {
     const response = await fetch(apiUrl, {

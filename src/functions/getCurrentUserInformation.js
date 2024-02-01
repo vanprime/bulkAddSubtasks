@@ -1,7 +1,8 @@
-import { jiraUrl } from "../constants";
+import createJiraApiBaseUrl from "./createJiraApiBaseUrl";
 
 export default async function getCurrentUserInformation() {
-  const apiUrl = `${jiraUrl}/myself`;
+  const jiraApiBaseUrl = createJiraApiBaseUrl();
+  const apiUrl = `${jiraApiBaseUrl}/myself`;
 
   try {
     const response = await fetch(apiUrl, {
