@@ -16,7 +16,8 @@
   "content_scripts": [
     {
       "matches": [
-        "https://jira.rewe-digital.org/*"
+        "https://jira.*/*",
+        "https://*/jira/*"
       ],
       "js": [
         "src/content.js"
