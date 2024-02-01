@@ -8,7 +8,7 @@ import getCurrentUserInformation from "./functions/getCurrentUserInformation";
 import constructIssueData from "./functions/constructIssueData";
 import postJiraIssues from "./functions/postJiraIssues";
 
-export default function App() {
+export default function App({ style, id }) {
   const [inputText, setInputText] = useState("");
   const [amountSubtasks, setAmountSubtasks] = useState(0);
   const [tasks, setTasks] = useState([]);
@@ -77,10 +77,7 @@ export default function App() {
   }
 
   return (
-    <div
-      id="bulkAddingApp"
-      className="ml-1 mr-2 my-2 p-4 border space-y-4 rounded"
-    >
+    <div id={id} className="p-4 border space-y-4 rounded" style={style}>
       <div class="flex space-x-4 items-end">
         <div class="flex flex-col flex-grow">
           <label for="bulkaddingInput" class="text-sm text-slate-700">

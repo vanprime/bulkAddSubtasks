@@ -9,7 +9,7 @@ This extension adds an extra input field to throw in all your desired sub-tasks,
 
 # limitations
 
-We could add features and go overly complex with the functionalities, but then we would end up where we came from.
+We could add features and go overly complex with the functionalities, but then we end up where we came from.
 
 # usage
 
@@ -26,15 +26,13 @@ We could add features and go overly complex with the functionalities, but then w
    <img src="./docs/images/chrome-pin-extension.png" width="300">
 
 5. On a\* page showing a detail view of the issue you want to add the subtasks to, klick on the extension icon. A div with an input field and a button will appear. Insert all the subtask summaries you want to add, seperated by ;
-   Klick the button and the upload will trigger. The page will refresh and your new subtasks should be visible. Ocassionally the new Sub-Tasks are not present in the refresh because the server is too slow. In that case you have to manually refresh, or just move to the next issue. If the refresh was triggered, the Sub-Tasks have been created.
+   Click the button and the upload will trigger. The page will refresh and your new subtasks should be visible. Ocassionally, the new Sub-Tasks are not shown after the refresh, because the server is too slow. In that case you have to manually refresh again, or just move to the next issue. If the refresh was triggered, the Sub-Tasks have been created.
 
 # auth
 
-Auth is handled by your session. The JIRA API relies on browser-based authentication (like cookies or session tokens) for requests originating from the same domain. When the extension's script makes a fetch request to the JIRA API from a page on the same domain, it automatically includes these credentials, thanks to the browser's same-origin policy.
+Auth is handled by your session. The jira API relies on browser-based authentication (like cookies or session tokens) for requests originating from the same domain. When the extension's script makes a fetch request to the jira API from a page on the same domain, it automatically includes these credentials, thanks to the browser's same-origin policy.
 
 # To do
 
-- fix page refresh not fetching (all) new sub-tasks
-- adjust container styling based on rendered page
 - trigger on page load instead of button click (20 Storypoints ez)
-- add extension configuration to manually add target URL instead of relying on manifest.json matcher
+- add extension configuration to enable it for jira instances with a weird name

@@ -4,16 +4,19 @@ import browser from "webextension-polyfill";
 
 // Function to append the Preact app to a target element
 function togglePreactApp() {
-
-  const targetContainer = getTargetElement();
+  const view = getView();
+  const targetContainer = getTargetElement(view);
 
   if (!targetContainer) {
     return;
   }
 
-  const appTargetId = "bulkAddingContainer"
+  const appTargetId = "bulkAddingContainer";
+  const appId = "bulkAddingApp";
   const appTarget = createAppContainer(targetContainer, appTargetId);
-  const appInstance = document.getElementById("bulkAddingApp");
+  const appInstance = document.getElementById(appId);
+
+  const appstyle = getStyle(view);
 
   if (appTarget && appInstance) {
     targetContainer.removeChild(appTarget);
@@ -21,11 +24,28 @@ function togglePreactApp() {
   }
 
   if (appTarget) {
-    render(<App />, appTarget);
+    render(<App style={appstyle} id={appId} />, appTarget);
   }
 }
 
-function getTargetElement() {
+function getView() {
+  if (!window) {
+    return;
+  }
+
+  const currentUrl = new URL(window.location);
+
+  if (currentUrl.pathname === "/secure/RapidBoard.jspa") {
+    return "backlog";
+  } else if (
+    currentUrl.pathname.startsWith("/browse/") ||
+    currentUrl.pathname.startsWith("/projects/")
+  ) {
+    return "single";
+  }
+}
+
+function getTargetElement(view) {
   if (!window) {
     return;
   }
@@ -34,15 +54,12 @@ function getTargetElement() {
   const targetInSingleView = "stalker";
   let targetElementId;
 
-  const currentUrl = new URL(window.location);
-
-  if (currentUrl.pathname === "/secure/RapidBoard.jspa") {
+  if (view === "backlog") {
     targetElementId = targetInBacklogView;
-  } else if (
-    currentUrl.pathname.startsWith("/browse/") ||
-    currentUrl.pathname.startsWith("/projects/")
-  ) {
+  } else if (view === "single") {
     targetElementId = targetInSingleView;
+  } else {
+    targetElementId = "page";
   }
 
   const targetParent = document.getElementById(targetElementId);
@@ -54,14 +71,39 @@ function getTargetElement() {
   }
 }
 
+function getStyle(view) {
+  const element = getTargetElement(view);
+
+  let style = {};
+
+  if (view === "backlog") {
+    style = {
+      marginTop: "12px",
+      marginRight: "8px",
+    };
+  }
+
+  if (view === "single") {
+    const firstChild = element.children[0];
+    const nestedChild = firstChild.children[0];
+    const targetElementStyle = window.getComputedStyle(nestedChild);
+    style = {
+      marginLeft: targetElementStyle.paddingLeft,
+      marginRight: targetElementStyle.paddingRight,
+      marginBottom: targetElementStyle.paddingTop,
+    };
+  }
+
+  return style;
+}
+
 function createAppContainer(targetContainer, appTargetId) {
   const div = document.createElement("div");
-  div.id = appTargetId
+  div.id = appTargetId;
   targetContainer.appendChild(div);
   const appTarget = document.getElementById(div.id);
   return appTarget;
 }
-
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "togglePreactApp") {
