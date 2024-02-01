@@ -10,16 +10,16 @@ This extension adds an extra input field to throw in all your desired sub-tasks,
 # usage
 
 1. Access Extension Management Page: Type `chrome://extensions/` in the address bar and press Enter.
-   ![extension manager](./docs/images/chrome-extension-manager.png)
+   <img src="./docs/images/chrome-extension-manager.png" width="300">
 
 2. Enable Developer Mode: In the top right corner of the Extensions page, you’ll see a switch for Developer mode. Turn it on. This allows you to load unpacked extensions.
-   ![developer mode](./docs/images/chrome-developer-mode.png)
+   <img src="./docs/images/chrome-developer-mode.png" width="300">
 
 3. Load the Unpacked Extension: Click on the load unpacked button which will appear in the corner after you enable Developer Mode. A file dialog will open. Navigate to your clone of the repo and click open.
-   ![load unpacked](./docs/images/chrome-load-unpacked.png)
+   <img src="./docs/images/chrome-load-unpacked.png" width="300">
 
 4. pin the extension to the toolbar
-   ![pin extension](./docs/images/chrome-pin-extension.png)
+   <img src="./docs/images/chrome-pin-extension.png" width="300">
 
 5. On a\* page showing a detail view of the issue you want to add the subtasks to, klick on the extension icon. A div with an input field and a button will appear. Insert all the subtask summaries you want to add, seperated by ;
    Klick the button and the upload will trigger. The page will refresh and your new subtasks should be visible. Ocassionally the new Sub-Tasks are not present in the refresh because the server is too slow. In that case you have to manually refresh, or just move to the next issue. If the refresh was triggered, the Sub-Tasks have been created.
