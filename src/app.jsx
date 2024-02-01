@@ -77,7 +77,10 @@ export default function App() {
   }
 
   return (
-    <div className="ml-1 mr-2 mb-2 p-4 border space-y-4 rounded">
+    <div
+      id="bulkAddingApp"
+      className="ml-1 mr-2 my-2 p-4 border space-y-4 rounded"
+    >
       <div class="flex space-x-4 items-end">
         <div class="flex flex-col flex-grow">
           <label for="bulkaddingInput" class="text-sm text-slate-700">

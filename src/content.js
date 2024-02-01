@@ -3,12 +3,23 @@ import App from "./app";
 import browser from "webextension-polyfill";
 
 // Function to append the Preact app to a target element
-function appendPreactApp() {
-  const target = getTargetElement();
+function togglePreactApp() {
+  const targetContainer = getTargetElement();
 
-  console.log("target: ", target);
-  if (target) {
-    render(<App />, target);
+  const div = document.createElement("div");
+  div.id = "bulkAddingContainer";
+  targetContainer.appendChild(div);
+
+  const appTarget = document.getElementById(div.id);
+  const appInstance = document.getElementById("bulkAddingApp");
+
+  if (appTarget && appInstance) {
+    targetContainer.removeChild(appTarget);
+    return;
+  }
+
+  if (appTarget) {
+    render(<App />, appTarget);
   }
 }
 
@@ -36,18 +47,19 @@ function getTargetElement() {
 
   if (!targetParent) {
     return;
+  } else {
+    return targetParent;
   }
-
-  const div = document.createElement("div");
-  div.id = "bulkAdding";
-  targetParent.appendChild(div);
-
-  const appTarget = document.getElementById(div.id);
-  return appTarget;
 }
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === "appendPreactApp") {
-    appendPreactApp();
+  if (request.action === "togglePreactApp") {
+    if (
+      window.location.href.includes("/jira/") ||
+      window.location.host.startsWith("jira.")
+    ) {
+      // This looks like a Jira instance, proceed with the script
+      togglePreactApp();
+    }
   }
 });

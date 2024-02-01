@@ -7,6 +7,10 @@ A not so smart chrome extension to bulk add subtasks to the currently viewed Jir
 Creating a lot of Sub-Tasks can be tedious with all the back and forth between selecting the input field and klicking the crate button. So why not create them all at once?
 This extension adds an extra input field to throw in all your desired sub-tasks, seperated by ; and create them with one click.
 
+# limitations
+
+We could add features and go overly complex with the functionalities, but then we would end up where we came from.
+
 # usage
 
 1. Access Extension Management Page: Type `chrome://extensions/` in the address bar and press Enter.<br>

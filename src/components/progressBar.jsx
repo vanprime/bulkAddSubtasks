@@ -14,7 +14,7 @@ const ProgressBar = ({ max, value, onComplete }) => {
         style={{
           transform: `scaleX(${scale})`,
           transformOrigin: "left",
-          transition: "transform 0.25s ease-out", // Adjust the transition timing to your preference
+          transition: "transform 0.33s ease-in-out", // Adjust the transition timing to your preference
         }}
         onTransitionEnd={(e) => handleTransitionEnd(e)}
       />
