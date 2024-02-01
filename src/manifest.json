@@ -1,20 +1,8 @@
 {
   "{{chrome}}.manifest_version": 3,
   "{{firefox}}.manifest_version": 2,
-  "{{chrome}}.action": {
-    "default_icon": {
-      "16": "images/icon-16.jpg",
-      "48": "images/icon-48.jpg",
-      "128": "images/icon-128.jpg"
-    }
-  },
-  "{{firefox}}.browser_action": {
-    "default_icon": {
-      "16": "images/icon-16.jpg",
-      "48": "images/icon-48.jpg",
-      "128": "images/icon-128.jpg"
-    }
-  },
+  "{{chrome}}.action": {},
+  "{{firefox}}.browser_action": {},
   "permissions": [
     "activeTab",
     "scripting"
@@ -24,6 +12,11 @@
     "{{firefox}}.scripts": [
       "src/background.js"
     ]
+  },
+  "icons": {
+    "16": "images/icon-16.png",
+    "48": "images/icon-48.png",
+    "128": "images/icon-128.png"
   },
   "content_scripts": [
     {
