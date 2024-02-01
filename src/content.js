@@ -4,13 +4,15 @@ import browser from "webextension-polyfill";
 
 // Function to append the Preact app to a target element
 function togglePreactApp() {
+
   const targetContainer = getTargetElement();
 
-  const div = document.createElement("div");
-  div.id = "bulkAddingContainer";
-  targetContainer.appendChild(div);
+  if (!targetContainer) {
+    return;
+  }
 
-  const appTarget = document.getElementById(div.id);
+  const appTargetId = "bulkAddingContainer"
+  const appTarget = createAppContainer(targetContainer, appTargetId);
   const appInstance = document.getElementById("bulkAddingApp");
 
   if (appTarget && appInstance) {
@@ -51,6 +53,15 @@ function getTargetElement() {
     return targetParent;
   }
 }
+
+function createAppContainer(targetContainer, appTargetId) {
+  const div = document.createElement("div");
+  div.id = appTargetId
+  targetContainer.appendChild(div);
+  const appTarget = document.getElementById(div.id);
+  return appTarget;
+}
+
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "togglePreactApp") {

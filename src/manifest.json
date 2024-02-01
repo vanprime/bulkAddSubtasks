@@ -7,6 +7,9 @@
     "activeTab",
     "scripting"
   ],
+  "icons": {
+    "96": "images/icon.jpg"
+  },
   "background": {
     "{{chrome}}.service_worker": "src/background.js",
     "{{firefox}}.scripts": [
