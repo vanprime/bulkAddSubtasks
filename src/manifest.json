@@ -8,7 +8,10 @@
     "scripting"
   ],
   "icons": {
-    "96": "icon.jpg"
+    "32": "icon-32.jpg",
+    "64": "icon-64.jpg",
+    "96": "icon-96.jpg",
+    "128": "icon-128.jpg"
   },
   "background": {
     "{{chrome}}.service_worker": "src/background.js",
