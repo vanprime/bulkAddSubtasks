@@ -8,7 +8,7 @@
     "scripting"
   ],
   "icons": {
-    "96": "images/icon.jpg"
+    "96": "icon.jpg"
   },
   "background": {
     "{{chrome}}.service_worker": "src/background.js",
