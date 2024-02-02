@@ -21,7 +21,7 @@ We could add features and go overly complex with the functionalities, but then w
 
 <img src="./docs/images/chrome-developer-mode.png" width="300">
 
-3. Load the Unpacked Extension: Click on the load unpacked button which will appear in the corner after you enable Developer Mode. A file dialog will open. Navigate to your clone of the repo and click open.<br>
+3. Load the Unpacked Extension: Click on the load unpacked button which will appear in the corner after you enable Developer Mode. A file dialog will open. Navigate to your download of the [release](https://github.com/vanprime/bulkAddSubtasks/releases).<br>
 
 <img src="./docs/images/chrome-load-unpacked.png" width="300">
 
@@ -30,7 +30,7 @@ We could add features and go overly complex with the functionalities, but then w
 <img src="./docs/images/chrome-pin-extension.png" width="300">
 
 5. On a\* page showing a detail view of the issue you want to add the subtasks to, klick on the extension icon. A div with an input field and a button will appear. Insert all the subtask summaries you want to add, seperated by ;
-Click the button and the upload will trigger. The page will refresh and your new subtasks should be visible. Ocassionally, the new Sub-Tasks are not shown after the refresh, because the server is too slow. In that case you have to manually refresh again, or just move to the next issue. If the refresh was triggered, the Sub-Tasks have been created.
+   Click the button and the upload will trigger. The page will refresh and your new subtasks should be visible. Ocassionally, the new Sub-Tasks are not shown after the refresh, because the server is too slow. In that case you have to manually refresh again, or just move to the next issue. If the refresh was triggered, the Sub-Tasks have been created.
 
 # auth
 
