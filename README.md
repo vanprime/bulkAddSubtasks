@@ -19,7 +19,7 @@ We could add features and go overly complex with the functionalities, but then w
 2. Enable Developer Mode: In the top right corner of the Extensions page, you’ll see a switch for Developer mode. Turn it on. This allows you to load unpacked extensions.<br>
    <img src="./docs/images/chrome-developer-mode.png" width="300">
 
-3. Load the Unpacked Extension: Click on the load unpacked button which will appear in the corner after you enable Developer Mode. A file dialog will open. Navigate to your clone of the repo and click open.<br>
+3. Load the Unpacked Extension: Click on the load unpacked button which will appear in the corner after you enable Developer Mode. A file dialog will open. Navigate to your download of the [release](https://github.com/vanprime/bulkAddSubtasks/releases).<br>
    <img src="./docs/images/chrome-load-unpacked.png" width="300">
 
 4. pin the extension to the toolbar<br>
