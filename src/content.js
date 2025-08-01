@@ -1,4 +1,4 @@
-import { h, render } from "preact";
+import { render } from "preact";
 import App from "./app";
 import browser from "webextension-polyfill";
 
@@ -39,7 +39,8 @@ function getView() {
     return "backlog";
   } else if (
     currentUrl.pathname.startsWith("/browse/") ||
-    currentUrl.pathname.startsWith("/projects/")
+    currentUrl.pathname.startsWith("/projects/") ||
+    currentUrl.pathname.startsWith("/browse")
   ) {
     return "single";
   }
@@ -105,11 +106,12 @@ function createAppContainer(targetContainer, appTargetId) {
   return appTarget;
 }
 
-browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+browser.runtime.onMessage.addListener((request) => {
   if (request.action === "togglePreactApp") {
+    const jiraDomainRegex = /(^|\.)jira\./; // Matches "jira" as a subdomain or directly adjacent prefix
     if (
       window.location.href.includes("/jira/") ||
-      window.location.host.startsWith("jira.")
+      jiraDomainRegex.test(window.location.host)
     ) {
       // This looks like a Jira instance, proceed with the script
       togglePreactApp();

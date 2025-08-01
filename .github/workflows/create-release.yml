@@ -8,10 +8,24 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    outputs:
+      version: ${{ steps.package_extension.outputs.version }}
+      extension_file: ${{ steps.package_extension.outputs.extension_file }}
+      commit_message: ${{ steps.get_commit.outputs.COMMIT_MESSAGE }}
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required to get the full commit history for the message
+
+      - name: Get last commit message
+        id: get_commit
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          echo "COMMIT_MESSAGE<<EOF" >> $GITHUB_OUTPUT
+          echo "$COMMIT_MSG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -28,19 +42,42 @@ jobs:
           NAME=$(node -p "require('./package.json').name")
           VERSION=$(node -p "require('./package.json').version")
           EXTENSION_FILE="${NAME}_${VERSION}.zip"
-          echo "EXTENSION_FILE=${EXTENSION_FILE}" >> $GITHUB_ENV
-          echo "::set-output name=extension_file::${EXTENSION_FILE}"
+          echo "extension_file=${EXTENSION_FILE}" >> $GITHUB_OUTPUT
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
           cd "./dist/${NAME}" && zip -r "../../${EXTENSION_FILE}" .
         shell: bash
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: extension
-          path: ${{ steps.package_extension.outputs.extension_file }}
+      - name: Push to Release Branch
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          # Create or switch to release branch
+          git checkout -B release
+          
+          # Remove everything except dist and essential files
+          find . -maxdepth 1 -not -name '.git' -not -name 'dist' -not -name 'package.json' -not -name 'README.md' -not -name 'LICENSE' -exec rm -rf {} + 2>/dev/null || true
+          
+          # Move dist contents to root
+          NAME=$(node -p "require('./package.json').name")
+          if [ -d "./dist/${NAME}" ]; then
+            cp -r "./dist/${NAME}"/* .
+            rm -rf dist
+          fi
+          
+          # Add and commit changes
+          git add -A
+          git diff --staged --quiet || git commit -m "Release build for version $(node -p "require('./package.json').version")"
+          
+          # Push to release branch
+          git push origin release --force
+        shell: bash
 
-    outputs:
-      extension_file: ${{ steps.package_extension.outputs.extension_file }}
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: extension-artifact
+          path: ${{ steps.package_extension.outputs.extension_file }}
 
   release:
     needs: build
@@ -49,48 +86,17 @@ jobs:
       contents: write
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Download Artifact
-        uses: actions/download-artifact@v3
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v4
         with:
-          name: extension
-          path: .
-
-      - name: Get last commit message
-        id: get_commit
-        run: echo "COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
-
-      - name: Get version
-        id: get_version
-        run: echo "::set-output name=VERSION::$(node -p "require('./package.json').version")"
+          name: extension-artifact
 
       - name: Create Release
-        run: |
-          RESPONSE=$(curl -s -X POST \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            https://api.github.com/repos/${{ github.repository }}/releases \
-            -d '{
-              "tag_name": "${{ steps.get_version.outputs.VERSION }}",
-              "target_commitish": "${{ github.sha }}",
-              "name": "${{ steps.get_version.outputs.VERSION }}",
-              "body": "${{ env.COMMIT_MESSAGE }}",
-              "draft": false,
-              "prerelease": false,
-              "auto_generate": false
-            }')
-          UPLOAD_URL=$(echo $RESPONSE | jq -r .upload_url | sed -e "s/{?name,label}//")
-          echo "UPLOAD_URL=${UPLOAD_URL}" >> $GITHUB_ENV
-        shell: bash
-
-      - name: Upload Artifact
-        run: |
-          curl -s -X POST \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            -H "Content-Type: application/zip" \
-            "${UPLOAD_URL}?name=${{ needs.build.outputs.extension_file }}" \
-            --upload-file ${{ needs.build.outputs.extension_file }}
-        shell: bash
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ needs.build.outputs.version }}
+          release_name: v${{ needs.build.outputs.version }}
+          body: ${{ needs.build.outputs.commit_message }}
+          files: ${{ needs.build.outputs.extension_file }}
