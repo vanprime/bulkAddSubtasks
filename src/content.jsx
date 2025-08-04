@@ -1,4 +1,4 @@
-import { render } from "preact";
+import { render } from 'preact';
 import App from "./app";
 import browser from "webextension-polyfill";
 
@@ -108,7 +108,7 @@ function createAppContainer(targetContainer, appTargetId) {
 
 browser.runtime.onMessage.addListener((request) => {
   if (request.action === "togglePreactApp") {
-    const jiraDomainRegex = /(^|\.)jira\./; // Matches "jira" as a subdomain or directly adjacent prefix
+    const jiraDomainRegex = /jira/;
     if (
       window.location.href.includes("/jira/") ||
       jiraDomainRegex.test(window.location.host)
