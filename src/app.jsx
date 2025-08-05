@@ -18,10 +18,9 @@ export default function App({ style, id }) {
 
   function handleInput(e) {
     
-    e.stopImmediatePropagation()
-
     const value = e.target.value;
     setInputText(value);
+    setError(null);
 
     if (value.trim() === "") {
       setAmountSubtasks(0);
@@ -31,7 +30,6 @@ export default function App({ style, id }) {
       setAmountSubtasks(taskArray.length);
     }
 
-    setError(null);
   }
 
   // this is now the chain of functions
@@ -66,10 +64,12 @@ export default function App({ style, id }) {
         setAmountSubtasks(0);
         setInputText("");
         setProgress(5);
+        setError(null);
       }
     } catch (error) {
       console.error("Error in getProjectVariables:", error.message);
       setError(error);
+      setProgress(0);
     } finally {
       setLoading(false);
     }
@@ -109,9 +109,14 @@ export default function App({ style, id }) {
         </button>
       </div>
       {error && (
-        <p className="text-destructive m-0 animate-fadeIn">{error.message}</p>
+        <p className="text-destructive m-0 animate-fadeIn text-sm">{error.message}</p>
       )}
-      <ProgressBar onComplete={handleUploadComplete} max="5" value={progress} />
+      <ProgressBar
+      onComplete={handleUploadComplete}
+      max="5"
+      value={progress}
+      error={error}
+      />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 # Requirements Document: Jira Bulk Sub-task Adder Extension
 
-**Version:** 1.0
+**Version:** 1.0.1
 **Date:** 2025-04-16
 
 ## 1. Introduction
@@ -19,7 +19,6 @@ The extension will:
 The extension will *not*:
 * Provide general Jira issue management features beyond bulk sub-task creation.
 * Store user credentials or API tokens independently (it relies on the browser's existing authenticated Jira session).
-* Function offline.
 
 ### 1.3 Definitions, Acronyms, and Abbreviations
 * **Jira:** Atlassian's issue tracking and project management software.
@@ -28,11 +27,6 @@ The extension will *not*:
 * **Parent Issue:** The Jira issue under which the bulk sub-tasks will be created.
 * **Project Key:** A short identifier for a Jira project (e.g., "PROJ").
 * **Issue Key:** A unique identifier for a Jira issue (e.g., "PROJ-123").
-* **API:** Application Programming Interface.
-* **REST:** Representational State Transfer.
-* **CSUI:** Content Script User Interface (Plasmo feature).
-* **UI:** User Interface.
-* **DOM:** Document Object Model.
 * **MV3:** Manifest Version 3 (Chrome Extension platform).
 
 ### 1.4 Overview
@@ -63,12 +57,11 @@ The primary user is any individual using Jira for project or task management who
 * **Target Application:** Web-based Jira instances (Cloud or Server versions exposing the required REST API endpoints).
 
 ### 2.5 Design and Implementation Constraints
-* **Technology Stack:** Must be developed using the Plasmo framework, React, and TypeScript. Styling must use Tailwind CSS.
+* **Technology Stack:** Must be developed using React. Styling must use Tailwind CSS.
 * **Manifest Version:** Must adhere to Chrome's Manifest V3 requirements.
 * **API Dependency:** Functionality is dependent on the specific endpoints and data structures of the Jira REST API (`/rest/api/latest/`). Changes in the API may require updates to the extension.
 * **DOM Dependency:** UI injection relies on specific DOM element IDs or structures within the target Jira pages (`ghx-detail-head`, `stalker`, `page`). Changes in the Jira frontend may break UI injection.
 * **Security:** Must operate within the security constraints of MV3 and browser extension permissions. API calls must rely on the user's existing browser authentication (e.g., cookies). Host permissions must be limited to necessary Jira domains.
-* **Style Isolation:** UI elements injected onto the page must use Shadow DOM (provided by Plasmo CSUI) to prevent style conflicts with the host Jira page.
 
 ### 2.6 Assumptions and Dependencies
 * The user is logged into their Jira instance in the browser where the extension is running.
@@ -160,7 +153,6 @@ The primary user is any individual using Jira for project or task management who
 * **UI4:** Standard controls (text area, button) should behave predictably.
 * **UI5:** Feedback elements (loading indicator, progress bar, error messages) shall be clearly visible when active.
 * **UI6:** Styling shall primarily use Tailwind CSS utility classes.
-* **UI7:** The UI shall be rendered within a Shadow DOM to prevent style clashes with the host Jira page.
 
 ### 3.3 External Interface Requirements
 * **EI1: Jira REST API:**
@@ -188,7 +180,7 @@ The primary user is any individual using Jira for project or task management who
     * **NFR4.1:** The extension should handle common errors (API errors, network issues, unexpected page structure) gracefully without crashing.
     * **NFR4.2:** The extension should consistently identify the correct parent issue context on supported pages.
 * **NFR5: Maintainability:**
-    * **NFR5.1:** Code shall be written in TypeScript using React and follow Plasmo framework conventions.
+    * **NFR5.1:** Code shall be following standard React patterns.
     * **NFR5.2:** Code should be well-commented and organized into logical modules (e.g., background, contents, components, utils).
     * **NFR5.3:** Use of Tailwind CSS should follow best practices for utility-first styling.
 * **NFR6: Compatibility:**

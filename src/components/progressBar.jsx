@@ -1,4 +1,4 @@
-const ProgressBar = ({ max, value, onComplete }) => {
+const ProgressBar = ({ max, value, onComplete, error = null }) => {
   const scale = max > 0 ? value / max : 0;
 
   function handleTransitionEnd(e) {
@@ -12,9 +12,10 @@ const ProgressBar = ({ max, value, onComplete }) => {
       <div
         className="bg-accent h-full rounded"
         style={{
-          transform: `scaleX(${scale})`,
+          transform: `${error ? "scaleX(1)" : `scaleX(${scale})`}`,
           transformOrigin: "left",
           transition: "transform 0.33s ease-out",
+          backgroundColor: `${error ? "tomato" : ""}`
         }}
         onTransitionEnd={(e) => handleTransitionEnd(e)}
       />
