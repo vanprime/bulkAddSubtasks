@@ -47,6 +47,12 @@ jobs:
           cd "./dist/${NAME}" && zip -r "../../${EXTENSION_FILE}" .
         shell: bash
 
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: extension-artifact
+          path: ${{ steps.package_extension.outputs.extension_file }}
+
       - name: Push to Release Branch
         run: |
           git config --local user.email "action@github.com"
@@ -73,12 +79,6 @@ jobs:
           git push origin release --force
         shell: bash
 
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: extension-artifact
-          path: ${{ steps.package_extension.outputs.extension_file }}
-
   release:
     needs: build
     runs-on: ubuntu-latest
@@ -92,6 +92,7 @@ jobs:
           name: extension-artifact
 
       - name: Create Release
+        id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -99,4 +100,13 @@ jobs:
           tag_name: v${{ needs.build.outputs.version }}
           release_name: v${{ needs.build.outputs.version }}
           body: ${{ needs.build.outputs.commit_message }}
-          files: ${{ needs.build.outputs.extension_file }}
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./${{ needs.build.outputs.extension_file }}
+          asset_name: ${{ needs.build.outputs.extension_file }}
+          asset_content_type: application/zip
