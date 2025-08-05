@@ -2,7 +2,7 @@
     "name": "bulkaddsubtasks",
     "description": "Add an input to bulk add subtasks",
     "private": true,
-    "version": "1.0.0",
+    "version": "1.0.1",
     "type": "module",
     "scripts": {
         "dev": "vite",
