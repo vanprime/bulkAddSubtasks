@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import webExtension, { readJsonFile } from "vite-plugin-web-extension";
-import { preact } from "@preact/preset-vite";
+import react from "@vitejs/plugin-react";
 import pkg from "./package.json";
 
 function generateManifest() {
@@ -16,7 +16,7 @@ function generateManifest() {
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    preact(),
+    react(),
     webExtension({
       manifest: generateManifest,
     }),

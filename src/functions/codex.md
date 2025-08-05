@@ -39,14 +39,3 @@ This section details the core logic functions found within the `/src/functions` 
     *   Includes user credentials (cookies) in the request.
     *   Returns the parsed JSON response from the Jira API upon success.
     *   Throws an `Error` object with a descriptive `message` property (including HTTP status and body if available) on HTTP errors or network issues.
-
----
-
-### Suggestions for Improvement:
-
-1.  **Parameter/Return Types:** Explicitly document the expected parameter types and the structure/type of the return value for each function (e.g., using JSDoc-like notation like `@param {string} projectKey` or `@returns {Promise<object>}`). This improves clarity, especially for asynchronous functions returning Promises.
-2.  **Error Handling Details:** While errors are mentioned, specify *what kind* of object is thrown (e.g., `Error` object) and the structure of the error (e.g., always contains a `.message` property).
-3.  **Dependency Clarity:** Explicitly list dependencies for each function, not just internal ones (like `createJiraApiBaseUrl`) but also external ones like `window.location` or the hardcoded `subTaskId` from `constants.js`.
-4.  **Add Overview:** Consider adding a short introductory paragraph summarizing the overall purpose of these functions (e.g., "These functions handle the core logic for interacting with the Jira API and processing user input for bulk sub-task creation.").
-5.  **Constants Link:** Ensure the link to `constants.js` is correct relative to this file (it should be `../constants.js`). *Self-correction: Updated links above.*
-6.  **Metadata Structure:** Briefly mention the expected structure of the `metadata` object used in `constructIssueData.js` (e.g., "expects metadata object containing a `values` array, where each element represents a field and may have `required` and `allowedValues` properties").

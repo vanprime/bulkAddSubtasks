@@ -1,7 +1,7 @@
-import { useState } from "preact/hooks";
+import { useState } from "react";
 import "./index.css";
 import ProgressBar from "./components/progressBar";
-import { RotateCw } from "lucide-preact";
+import { RotateCw } from "lucide-react";
 import getProjectVariables from "./functions/getProjectVariables";
 import getCreateIssueMetadata from "./functions/getCreateIssueMetadata";
 import getCurrentUserInformation from "./functions/getCurrentUserInformation";
@@ -17,8 +17,10 @@ export default function App({ style, id }) {
   const [error, setError] = useState(null);
 
   function handleInput(e) {
+    
     const value = e.target.value;
     setInputText(value);
+    setError(null);
 
     if (value.trim() === "") {
       setAmountSubtasks(0);
@@ -28,7 +30,6 @@ export default function App({ style, id }) {
       setAmountSubtasks(taskArray.length);
     }
 
-    setError(null);
   }
 
   // this is now the chain of functions
@@ -63,10 +64,12 @@ export default function App({ style, id }) {
         setAmountSubtasks(0);
         setInputText("");
         setProgress(5);
+        setError(null);
       }
     } catch (error) {
       console.error("Error in getProjectVariables:", error.message);
       setError(error);
+      setProgress(0);
     } finally {
       setLoading(false);
     }
@@ -78,37 +81,42 @@ export default function App({ style, id }) {
 
   return (
     <div id={id} className="p-4 border space-y-4 rounded" style={style}>
-      <div class="flex space-x-4 items-end">
-        <div class="flex flex-col flex-grow">
-          <label for="bulkaddingInput" class="text-sm text-slate-700">
+      <div className="flex space-x-4 items-end">
+        <div className="flex flex-col flex-grow">
+          <label htmlFor="bulkaddingInput" className="text-sm text-slate-700">
             Add Sub-tasks on bulk
           </label>
           <textarea
             id="bulkaddingInput"
-            class="flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
             placeholder="seperate by ;"
             value={inputText}
-            onInput={(e) => handleInput(e)}
-            autocomplete="off"
+            onChange={(e) => handleInput(e)}
+            autoComplete="off"
             disabled={loading}
           />
         </div>
         <button
-          class="min-w-[18ch] h-9 px-4 py-2 bg-muted inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+          className="min-w-[18ch] h-9 px-4 py-2 bg-muted inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
           disabled={loading || error || amountSubtasks === 0}
           onClick={(e) => handleSubmit(e)}
         >
           {loading ? (
-            <RotateCw class="h-4 w-4 animate-spin m-auto" />
+            <RotateCw className="h-4 w-4 animate-spin m-auto" />
           ) : (
             <>Add {amountSubtasks} Sub-Tasks</>
           )}
         </button>
       </div>
       {error && (
-        <p class="text-destructive m-0 animate-fadeIn">{error.message}</p>
+        <p className="text-destructive m-0 animate-fadeIn text-sm">{error.message}</p>
       )}
-      <ProgressBar onComplete={handleUploadComplete} max="5" value={progress} />
+      <ProgressBar
+      onComplete={handleUploadComplete}
+      max="5"
+      value={progress}
+      error={error}
+      />
     </div>
   );
 }

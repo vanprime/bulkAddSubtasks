@@ -1,9 +1,9 @@
-import { render } from 'preact';
+import { createRoot } from 'react-dom/client';
 import App from "./app";
 import browser from "webextension-polyfill";
 
-// Function to append the Preact app to a target element
-function togglePreactApp() {
+// Function to append the React app to a target element
+function toggleReactApp() {
   const view = getView();
   const targetContainer = getTargetElement(view);
 
@@ -24,7 +24,8 @@ function togglePreactApp() {
   }
 
   if (appTarget) {
-    render(<App style={appstyle} id={appId} />, appTarget);
+    const root = createRoot(appTarget);
+    root.render(<App style={appstyle} id={appId} />);
   }
 }
 
@@ -107,14 +108,14 @@ function createAppContainer(targetContainer, appTargetId) {
 }
 
 browser.runtime.onMessage.addListener((request) => {
-  if (request.action === "togglePreactApp") {
+  if (request.action === "toggleReactApp") {
     const jiraDomainRegex = /jira/;
     if (
       window.location.href.includes("/jira/") ||
       jiraDomainRegex.test(window.location.host)
     ) {
       // This looks like a Jira instance, proceed with the script
-      togglePreactApp();
+      toggleReactApp();
     }
   }
 });
