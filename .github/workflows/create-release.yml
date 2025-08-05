@@ -2,6 +2,16 @@ name: Build and Release
 
 on:
   workflow_dispatch:
+    inputs:
+      version_bump:
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+        - patch
+        - minor
+        - major
 
 jobs:
   build:
@@ -32,6 +42,15 @@ jobs:
 
       - name: Install Dependencies
         run: npm ci
+
+      - name: Bump Version
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          npm version ${{ github.event.inputs.version_bump }} --no-git-tag-version
+          git add package.json package-lock.json
+          git commit -m "Bump version to $(node -p "require('./package.json').version")"
+          git push
 
       - name: Build Extension
         run: npm run build
@@ -91,22 +110,12 @@ jobs:
         with:
           name: extension-artifact
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Release with Asset
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ needs.build.outputs.version }}
-          release_name: v${{ needs.build.outputs.version }}
+          name: v${{ needs.build.outputs.version }}
           body: ${{ needs.build.outputs.commit_message }}
-
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
+          files: ${{ needs.build.outputs.extension_file }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ needs.build.outputs.extension_file }}
-          asset_name: ${{ needs.build.outputs.extension_file }}
-          asset_content_type: application/zip
