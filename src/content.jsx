@@ -1,11 +1,10 @@
-import { createRoot } from 'react-dom/client';
+import { createRoot } from "react-dom/client";
 import App from "./app";
 import browser from "webextension-polyfill";
 
 // Function to append the React app to a target element
-function toggleReactApp() {
-  const view = getView();
-  const targetContainer = getTargetElement(view);
+function toggleReactApp(containerId) {
+  const targetContainer = document.getElementById(containerId);
 
   if (!targetContainer) {
     return;
@@ -16,8 +15,6 @@ function toggleReactApp() {
   const appTarget = createAppContainer(targetContainer, appTargetId);
   const appInstance = document.getElementById(appId);
 
-  const appstyle = getStyle(view);
-
   if (appTarget && appInstance) {
     targetContainer.removeChild(appTarget);
     return;
@@ -25,78 +22,8 @@ function toggleReactApp() {
 
   if (appTarget) {
     const root = createRoot(appTarget);
-    root.render(<App style={appstyle} id={appId} />);
+    root.render(<App id={appId} />);
   }
-}
-
-function getView() {
-  if (!window) {
-    return;
-  }
-
-  const currentUrl = new URL(window.location);
-
-  if (currentUrl.pathname === "/secure/RapidBoard.jspa") {
-    return "backlog";
-  } else if (
-    currentUrl.pathname.startsWith("/browse/") ||
-    currentUrl.pathname.startsWith("/projects/") ||
-    currentUrl.pathname.startsWith("/browse")
-  ) {
-    return "single";
-  }
-}
-
-function getTargetElement(view) {
-  if (!window) {
-    return;
-  }
-
-  const targetInBacklogView = "ghx-detail-head";
-  const targetInSingleView = "stalker";
-  let targetElementId;
-
-  if (view === "backlog") {
-    targetElementId = targetInBacklogView;
-  } else if (view === "single") {
-    targetElementId = targetInSingleView;
-  } else {
-    targetElementId = "page";
-  }
-
-  const targetParent = document.getElementById(targetElementId);
-
-  if (!targetParent) {
-    return;
-  } else {
-    return targetParent;
-  }
-}
-
-function getStyle(view) {
-  const element = getTargetElement(view);
-
-  let style = {};
-
-  if (view === "backlog") {
-    style = {
-      marginTop: "12px",
-      marginRight: "8px",
-    };
-  }
-
-  if (view === "single") {
-    const firstChild = element.children[0];
-    const nestedChild = firstChild.children[0];
-    const targetElementStyle = window.getComputedStyle(nestedChild);
-    style = {
-      marginLeft: targetElementStyle.paddingLeft,
-      marginRight: targetElementStyle.paddingRight,
-      marginBottom: targetElementStyle.paddingTop,
-    };
-  }
-
-  return style;
 }
 
 function createAppContainer(targetContainer, appTargetId) {
@@ -109,13 +36,16 @@ function createAppContainer(targetContainer, appTargetId) {
 
 browser.runtime.onMessage.addListener((request) => {
   if (request.action === "toggleReactApp") {
-    const jiraDomainRegex = /jira/;
-    if (
-      window.location.href.includes("/jira/") ||
-      jiraDomainRegex.test(window.location.host)
-    ) {
-      // This looks like a Jira instance, proceed with the script
-      toggleReactApp();
-    }
+    browser.storage.sync.get("configs").then((result) => {
+      if (result.configs) {
+        const currentUrl = window.location.href;
+        for (const config of result.configs) {
+          if (currentUrl.includes(config.url)) {
+            toggleReactApp(config.containerId);
+            break;
+          }
+        }
+      }
+    });
   }
 });

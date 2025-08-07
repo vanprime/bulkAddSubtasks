@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./index.css";
 import ProgressBar from "./components/progressBar";
 import { RotateCw } from "lucide-react";
@@ -7,14 +7,24 @@ import getCreateIssueMetadata from "./functions/getCreateIssueMetadata";
 import getCurrentUserInformation from "./functions/getCurrentUserInformation";
 import constructIssueData from "./functions/constructIssueData";
 import postJiraIssues from "./functions/postJiraIssues";
+import browser from "webextension-polyfill";
 
-export default function App({ style, id }) {
+export default function App({ id }) {
   const [inputText, setInputText] = useState("");
   const [amountSubtasks, setAmountSubtasks] = useState(0);
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState(null);
+  const [includeReporter, setIncludeReporter] = useState(false);
+
+  useEffect(() => {
+    browser.storage.sync.get("includeReporter").then((result) => {
+      if (result.includeReporter) {
+        setIncludeReporter(result.includeReporter);
+      }
+    });
+  }, []);
 
   function handleInput(e) {
     
@@ -54,7 +64,8 @@ export default function App({ style, id }) {
         projectKey,
         parentIssue,
         tasks,
-        reporter
+        reporter,
+        includeReporter
       );
       if (issueData) {
         setProgress(4);
@@ -117,6 +128,14 @@ export default function App({ style, id }) {
       value={progress}
       error={error}
       />
+      <div className="text-center">
+        <button
+          onClick={() => browser.runtime.openOptionsPage()}
+          className="text-sm text-slate-500 hover:text-slate-700"
+        >
+          Options
+        </button>
+      </div>
     </div>
   );
 }

@@ -3,9 +3,11 @@
   "{{firefox}}.manifest_version": 2,
   "{{chrome}}.action": {},
   "{{firefox}}.browser_action": {},
+  "options_page": "public/options.html",
   "permissions": [
     "activeTab",
-    "scripting"
+    "scripting",
+    "storage"
   ],
   "background": {
     "{{chrome}}.service_worker": "src/background.js",

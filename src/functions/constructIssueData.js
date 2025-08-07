@@ -5,7 +5,8 @@ export default function constructIssueData(
   projectKey,
   parentIssueKey,
   tasks,
-  reporter
+  reporter,
+  includeReporter
 ) {
   let issueDataArray = [];
   const requiredFields = metadata?.values.filter((field) => field?.required);
@@ -23,11 +24,14 @@ export default function constructIssueData(
         parent: {
           key: parentIssueKey,
         },
-        reporter: {
-          name: reporter.name,
-        },
       },
     };
+
+    if (includeReporter) {
+      issueData.fields.reporter = {
+        name: reporter.name,
+      };
+    }
 
     for (const field of requiredFields) {
       // Check if the field is not already in issueData
