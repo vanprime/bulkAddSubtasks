@@ -7,6 +7,7 @@ import getCreateIssueMetadata from "./functions/getCreateIssueMetadata";
 import getCurrentUserInformation from "./functions/getCurrentUserInformation";
 import constructIssueData from "./functions/constructIssueData";
 import postJiraIssues from "./functions/postJiraIssues";
+import getIssueData from "./functions/getIssueData";
 
 export default function App({ style, id }) {
   const [inputText, setInputText] = useState("");
@@ -37,8 +38,9 @@ export default function App({ style, id }) {
     setLoading(true);
     setProgress(0);
     try {
-      const { parentIssue, projectKey } = getProjectVariables();
-      if (parentIssue && projectKey) {
+      const { parentIssueKey, projectKey } = getProjectVariables();
+      if (parentIssueKey && projectKey) {
+        console.log(parentIssueKey, projectKey)
         setProgress(1);
       }
       const issueMetadata = await getCreateIssueMetadata(projectKey);
@@ -49,6 +51,11 @@ export default function App({ style, id }) {
       if (reporter) {
         setProgress(3);
       }
+      const parentIssue = await getIssueData(parentIssueKey)
+      if (parentIssue) {
+        console.log(parentIssue)
+        setProgress(4)
+      }
       const issueData = constructIssueData(
         issueMetadata,
         projectKey,
@@ -57,13 +64,13 @@ export default function App({ style, id }) {
         reporter
       );
       if (issueData) {
-        setProgress(4);
+        setProgress(5);
       }
       const uploadSuccess = await postJiraIssues(issueData);
       if (uploadSuccess) {
         setAmountSubtasks(0);
         setInputText("");
-        setProgress(5);
+        setProgress(6);
         setError(null);
       }
     } catch (error) {
@@ -113,7 +120,7 @@ export default function App({ style, id }) {
       )}
       <ProgressBar
       onComplete={handleUploadComplete}
-      max="5"
+      max="6"
       value={progress}
       error={error}
       />
